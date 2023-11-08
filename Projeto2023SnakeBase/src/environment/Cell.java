@@ -41,7 +41,7 @@ public class Cell {
 
 	public void request(Snake snake) throws InterruptedException {
 		lock.lock();
-		// TODO coordination and mutual exclusion
+		 // TODO coordination and mutual exclusion
 		try {
 			while (ocuppyingSnake != null) {
 				isFree.await();
