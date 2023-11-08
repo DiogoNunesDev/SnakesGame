@@ -1,6 +1,9 @@
 package environment;
 
 import java.io.Serializable;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.sound.midi.SysexMessage;
 
@@ -18,6 +21,8 @@ public class Cell {
 	private BoardPosition position;
 	private Snake ocuppyingSnake = null;
 	private GameElement gameElement=null;
+	private Lock lock= new ReentrantLock();
+	private Condition isFree = lock.newCondition();
 	
 	public GameElement getGameElement() {
 		return gameElement;
@@ -33,14 +38,21 @@ public class Cell {
 		return position;
 	}
 
-	public void request(Snake snake)
-			throws InterruptedException {
-		//TODO coordination and mutual exclusion
-		ocuppyingSnake=snake;
+	public void request(Snake snake) throws InterruptedException {
+		lock.lock();
+			//TODO coordination and mutual exclusion
+			try {
+				while(ocuppyingSnake!=null) {
+					isFree.await();
+				}
+				ocuppyingSnake = snake;
+			}finally {
+				lock.unlock();
+			}
 	}
 
 	public void release() {
-		//TODO
+		ocuppyingSnake=null;
 	}
 
 	public boolean isOcupiedBySnake() {
