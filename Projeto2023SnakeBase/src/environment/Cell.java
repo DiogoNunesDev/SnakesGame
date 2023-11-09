@@ -43,7 +43,7 @@ public class Cell {
 		lock.lock();
 		 // TODO coordination and mutual exclusion
 		try {
-			while (ocuppyingSnake != null) {
+			while (isOcupiedBySnake()) {
 				isFree.await();
 			}
 			ocuppyingSnake = snake;
