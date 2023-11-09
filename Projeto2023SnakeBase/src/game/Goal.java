@@ -1,6 +1,7 @@
 package game;
 
 import environment.Board;
+import environment.BoardPosition;
 import environment.LocalBoard;
 
 public class Goal extends GameElement  {
@@ -15,11 +16,39 @@ public class Goal extends GameElement  {
 		return value;
 	}
 	public void incrementValue() throws InterruptedException {
-		//TODO
+		this.value++;
 	}
 
-	public int captureGoal() {
-//		TODO
+	public int captureGoal(Snake snake) throws InterruptedException {
+		if (value < MAX_VALUE) {
+			BoardPosition position = generateGoalPosition();
+			getBoard().getCell(position).setGameElement((GameElement)this);
+			getBoard().setGoalPosition(position);
+			this.incrementValue();
+			snake.size++;
+			getBoard().setChanged();
+		}
 		return -1;
 	}
+
+	public Board getBoard() {
+		return board;
+	}
+	
+	public BoardPosition generateGoalPosition() {
+		int posX = (int) (Math.random() * Board.NUM_ROWS);
+		int posY = (int) (Math.random() * Board.NUM_ROWS);
+		BoardPosition position = new BoardPosition(posX, posY);
+		
+		if (getBoard().getCell(position).isOcupied()) {
+			while (getBoard().getCell(position).isOcupied()) {
+				posX = (int) (Math.random() * Board.NUM_ROWS);
+				posY = (int) (Math.random() * Board.NUM_ROWS);
+				position = new BoardPosition(posX, posY);
+			}
+
+		}
+		return position;
+	}
+	
 }

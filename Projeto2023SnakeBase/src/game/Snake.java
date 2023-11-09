@@ -44,7 +44,7 @@ public abstract class Snake extends Thread implements Serializable{
 	protected void move(Cell cell) throws InterruptedException {
 		cell.request(this);
 		cells.add(cell);
-		if (getSize() < cells.size()) {
+		if (getSize() < cells.size() && !cell.isOcupiedByGoal()) {
 			//Se o tamanho da cobra for menor que o numero de cells que o seu corpo ocupa
 			Cell tail = cells.removeFirst();
 			tail.release();

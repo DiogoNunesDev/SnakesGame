@@ -45,6 +45,10 @@ public class Cell {
 			while (isOcupied()) {
 				isFree.await();
 			}
+			if(this.isOcupiedByGoal()) {
+				this.getGoal().captureGoal(snake);
+				this.gameElement=null;
+			}
 			ocuppyingSnake = snake;
 		} finally {
 			lock.unlock();

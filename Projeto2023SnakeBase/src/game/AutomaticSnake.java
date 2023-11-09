@@ -1,6 +1,5 @@
 package game;
 
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,14 +22,23 @@ public class AutomaticSnake extends Snake {
 	public void run() {
 		doInitialPositioning();
 		System.err.println("initial size:"+cells.size());
-		System.err.println("CELL: " + cells.getLast().getPosition().x + " - " + cells.getLast().getPosition().y);
 		//TODO: automatic movement
 		while(this.getSize() < 10) {
 			try {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);
-				BoardPosition position = cells.getLast().getPosition();
-				BoardPosition newPosition = new BoardPosition(position.x+1, position.y);
-				Cell nextCell = this.getBoard().getCell(newPosition);
+				BoardPosition goalPosition = getBoard().getGoalPosition();
+				BoardPosition snakePosition = this.getCells().getLast().getPosition();
+				Cell currenCell = getBoard().getCell(snakePosition);
+				
+				Double distanceToGoal = snakePosition.distanceTo(goalPosition);
+				
+				Cell nextCell = null;
+				
+				for(BoardPosition pos : getBoard().getNeighboringPositions(currenCell)) {
+					if (distanceToGoal > pos.distanceTo(goalPosition)){
+						nextCell = this.getBoard().getCell(pos);
+					}
+				}
 				this.move(nextCell);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
@@ -41,6 +49,5 @@ public class AutomaticSnake extends Snake {
 		
 	}
 	
-
 	
 }
