@@ -44,12 +44,12 @@ public abstract class Snake extends Thread implements Serializable{
 	protected void move(Cell cell) throws InterruptedException {
 		cell.request(this);
 		cells.add(cell);
-		
 		if (getSize() < cells.size()) {
 			//Se o tamanho da cobra for menor que o numero de cells que o seu corpo ocupa
 			Cell tail = cells.removeFirst();
 			tail.release();
 		}
+		getBoard().setChanged();
 		
 	}
 	
@@ -68,7 +68,7 @@ public abstract class Snake extends Thread implements Serializable{
 		int posY = (int) (Math.random() * Board.NUM_ROWS);
 		BoardPosition at = new BoardPosition(posX, posY);
 		
-		while (getBoard().getCell(at).isOcupiedBySnake()) {
+		while (getBoard().getCell(at).isOcupied()) {
 			posY = (int) (Math.random() * Board.NUM_ROWS);
 			at = new BoardPosition(posX, posY);
 		}

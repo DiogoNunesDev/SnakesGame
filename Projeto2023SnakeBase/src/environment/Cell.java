@@ -41,9 +41,8 @@ public class Cell {
 
 	public void request(Snake snake) throws InterruptedException {
 		lock.lock();
-		 // TODO coordination and mutual exclusion
 		try {
-			while (isOcupiedBySnake()) {
+			while (isOcupied()) {
 				isFree.await();
 			}
 			ocuppyingSnake = snake;
@@ -60,8 +59,7 @@ public class Cell {
 		return ocuppyingSnake != null;
 	}
 
-	public void setGameElement(GameElement element) {
-		// TODO coordination and mutual exclusion
+	public synchronized void setGameElement(GameElement element) {
 		gameElement = element;
 
 	}
