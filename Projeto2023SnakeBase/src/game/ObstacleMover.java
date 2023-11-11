@@ -14,6 +14,6 @@ public class ObstacleMover extends Thread {
 
 	@Override
 	public void run() {
-		// TODO
+		
 	}
 }

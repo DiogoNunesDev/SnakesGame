@@ -37,7 +37,7 @@ public class AutomaticSnake extends Snake {
 					Cell potencialCell = this.getBoard().getCell(pos);
 					double distanceToGoal = pos.distanceTo(goalPosition);
 					
-					if (!this.cells.contains(this.getBoard().getCell(pos)) && distanceToGoal < min_distanceToGoal) {
+					if (!this.cells.contains(potencialCell) && distanceToGoal < min_distanceToGoal) {
 						nextCell = potencialCell;
 						min_distanceToGoal = distanceToGoal;
 					}	
