@@ -1,5 +1,6 @@
 package game;
 
+import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,26 +23,29 @@ public class AutomaticSnake extends Snake {
 	public void run() {
 		doInitialPositioning();
 		System.err.println("initial size:"+cells.size());
-		//TODO: automatic movement
 		while(this.getSize() < 10) {
 			try {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);
 				BoardPosition goalPosition = getBoard().getGoalPosition();
 				BoardPosition snakePosition = this.getCells().getLast().getPosition();
-				Cell currenCell = getBoard().getCell(snakePosition);
+				Cell currentCell = getBoard().getCell(snakePosition);
 				
-				Double distanceToGoal = snakePosition.distanceTo(goalPosition);
-				
+				double min_distanceToGoal = Double.MAX_VALUE;
 				Cell nextCell = null;
 				
-				for(BoardPosition pos : getBoard().getNeighboringPositions(currenCell)) {
-					if (distanceToGoal > pos.distanceTo(goalPosition)){
-						nextCell = this.getBoard().getCell(pos);
-					}
+				for(BoardPosition pos : getBoard().getNeighboringPositions(currentCell)) {
+					Cell potencialCell = this.getBoard().getCell(pos);
+					double distanceToGoal = pos.distanceTo(goalPosition);
+					
+					if (!this.cells.contains(this.getBoard().getCell(pos)) && distanceToGoal < min_distanceToGoal) {
+						nextCell = potencialCell;
+						min_distanceToGoal = distanceToGoal;
+					}	
 				}
-				this.move(nextCell);
+				if (nextCell != null) {
+					this.move(nextCell);
+				}
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}

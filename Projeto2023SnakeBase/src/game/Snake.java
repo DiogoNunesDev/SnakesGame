@@ -42,6 +42,7 @@ public abstract class Snake extends Thread implements Serializable{
 		return cells;
 	}
 	protected void move(Cell cell) throws InterruptedException {
+		cell = check_outOfBounds(cell);
 		cell.request(this);
 		cells.add(cell);
 		if (getSize() < cells.size() && !cell.isOcupiedByGoal()) {
@@ -87,5 +88,25 @@ public abstract class Snake extends Thread implements Serializable{
 		return board;
 	}
 	
+	private Cell check_outOfBounds(Cell cell) {
+		if (cell.getPosition().x==31) {
+			BoardPosition nextPosition = new BoardPosition(0, cell.getPosition().y);
+			cell = getBoard().getCell(nextPosition);
+		}
+		else if (cell.getPosition().x==-1) {
+			BoardPosition nextPosition = new BoardPosition(30, cell.getPosition().y);
+			cell = getBoard().getCell(nextPosition);
+		}
+		else if (cell.getPosition().y==31)	{
+			BoardPosition nextPosition = new BoardPosition(cell.getPosition().x, 0);
+			cell = getBoard().getCell(nextPosition);
+		}
+		else if (cell.getPosition().y==-1)	{
+			BoardPosition nextPosition = new BoardPosition(cell.getPosition().x, 30);
+			cell = getBoard().getCell(nextPosition);
+		}
+		return cell;
 	
+	
+	}
 }

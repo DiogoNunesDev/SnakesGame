@@ -42,12 +42,12 @@ public class Cell {
 	public void request(Snake snake) throws InterruptedException {
 		lock.lock();
 		try {
-			while (isOcupied()) {
-				isFree.await();
-			}
 			if(this.isOcupiedByGoal()) {
 				this.getGoal().captureGoal(snake);
 				this.gameElement=null;
+			}
+			while (isOcupied()) {
+				isFree.await();
 			}
 			ocuppyingSnake = snake;
 		} finally {
@@ -56,7 +56,14 @@ public class Cell {
 	}
 
 	public void release() {
-		ocuppyingSnake = null;
+		lock.lock();
+		try {
+			ocuppyingSnake = null;
+			isFree.signalAll();
+		}
+	    finally {
+	        lock.unlock();
+	    }
 	}
 
 	public boolean isOcupiedBySnake() {
