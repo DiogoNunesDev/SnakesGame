@@ -80,6 +80,10 @@ public abstract class Board extends Observable {
 
 	
 
+	public Cell[][] getCells() {
+		return cells;
+	}
+
 	protected Goal addGoal() {
 		Goal goal=new Goal(this);
 		addGameElement( goal);

@@ -1,5 +1,6 @@
 package game;
 
+import environment.BoardPosition;
 import environment.Cell;
 import environment.LocalBoard;
 
@@ -14,28 +15,14 @@ public class ObstacleMover extends Thread {
 	}
 
 	@Override
-	public void run(  ) {
-
-		
+	public void run() {
 
 		while (this.obstacle.getRemainingMoves() > 0) {
 			try {
-			
 				
-				// aceder a lista de obstacles no board e
-				this.obstacle.getBoard().getObstacles();
-			
-				// obter cell onde esta o obstaculo
-				Cell previousCell = this.obstacle.getCell();
-				// mover the position a cell em que o obstaculo esta
-				// so mover parqa posicoes vazias de game elements
-				this.obstacle.randomObstaclePosition();
-				// game element .setgameElement(obstacle o )
-				// na celula antiga set null o parametro game element
-				previousCell.release();
-				notifyAll();
-				// decrementar o valor do obstaculo
-				this.obstacle.decrementValue();
+				BoardPosition new_position = this.obstacle.randomObstaclePosition();
+				Cell new_cell = board.getCell(new_position);
+				obstacle.move(new_cell);
 
 			} catch (Exception e) {
 				e.printStackTrace();

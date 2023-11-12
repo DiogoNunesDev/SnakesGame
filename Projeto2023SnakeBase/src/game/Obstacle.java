@@ -30,8 +30,16 @@ public class Obstacle extends GameElement {
 	}
 	
 	public BoardPosition getPosition() {
-		Cell cell = getBoard().getCell(getPosition()) ;
-		BoardPosition position = cell.getPosition() ;
+		Cell cell = null;
+		for (int i = 0; i < getBoard().getCells().length; i++) {
+	        for (int j = 0; j < getBoard().getCells()[i].length; j++) {
+	        	if(this == getBoard().getCells()[i][j].getGameElement()) {
+	        		cell = getBoard().getCell(new BoardPosition(i, j));
+	        	} 
+	        }
+		}
+		
+		BoardPosition position = cell.getPosition();
 		return position;
 	}
 	
@@ -53,6 +61,13 @@ public class Obstacle extends GameElement {
 
 		}
 		return position;
+	}
+	
+	protected void move(Cell cell) throws InterruptedException {
+		getCell().setGameElement(null);
+		cell.setGameElement((GameElement)this);
+		notifyAll();
+		decrementValue();
 	}
 	 
 
