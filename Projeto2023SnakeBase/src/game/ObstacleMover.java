@@ -9,12 +9,12 @@ public class ObstacleMover extends Thread {
 
 	public ObstacleMover(Obstacle obstacle, LocalBoard board) {
 		super();
-		this.obstacle = obstacle;
+		this.obstacle = obstacle ;
 		this.board = board;
 	}
 
 	@Override
-	public void run() {
+	public void run(  ) {
 
 		
 
