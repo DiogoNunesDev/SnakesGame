@@ -95,7 +95,7 @@ public class Cell {
 	public Goal getGoal() {
 		return (Goal) gameElement;
 	}
-
+	
 	public boolean isOcupiedByGoal() {
 		return (gameElement != null && gameElement instanceof Goal);
 	}

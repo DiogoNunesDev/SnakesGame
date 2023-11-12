@@ -20,7 +20,6 @@ public abstract class Snake extends Thread implements Serializable{
 	protected int size = 5;
 	private int id;
 	private Board board;
-	
 	public Snake(int id,Board board) {
 		this.id = id;
 		this.board=board;
@@ -51,7 +50,6 @@ public abstract class Snake extends Thread implements Serializable{
 			tail.release();
 		}
 		getBoard().setChanged();
-		
 	}
 	
 	public LinkedList<BoardPosition> getPath() {
