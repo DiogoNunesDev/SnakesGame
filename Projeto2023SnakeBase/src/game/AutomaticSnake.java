@@ -23,7 +23,7 @@ public class AutomaticSnake extends Snake {
 	public void run() {
 		doInitialPositioning();
 		System.err.println("initial size:"+cells.size());
-		while(this.getSize() < 10) {
+		while(this.size < 10) {
 			try {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);
 				BoardPosition goalPosition = getBoard().getGoalPosition();

@@ -47,28 +47,16 @@ public class Obstacle extends GameElement {
 		return getBoard().getCell(getPosition()) ;
 	}
 	
-	public BoardPosition randomObstaclePosition() {
-		int posX = (int) (Math.random() * Board.NUM_ROWS);
-		int posY = (int) (Math.random() * Board.NUM_ROWS);
-		BoardPosition position = new BoardPosition(posX, posY);
-		
-		if (getBoard().getCell(position).isOcupied()) {
-			while (getBoard().getCell(position).isOcupied()) {
-				posX = (int) (Math.random() * Board.NUM_ROWS);
-				posY = (int) (Math.random() * Board.NUM_ROWS);
-				position = new BoardPosition(posX, posY);
-			}
-
-		}
-		return position;
-	}
-	
-	protected void move(Cell cell) throws InterruptedException {
+	protected synchronized void move(Cell cell) throws InterruptedException {
 		getCell().setGameElement(null);
 		cell.setGameElement((GameElement)this);
 		notifyAll();
 		decrementValue();
+		getBoard().setChanged();
 	}
 	 
+	public int getSleepTime() {
+		return OBSTACLE_MOVE_INTERVAL;
+	}
 
 }

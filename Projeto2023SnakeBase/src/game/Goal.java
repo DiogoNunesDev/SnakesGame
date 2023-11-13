@@ -21,7 +21,7 @@ public class Goal extends GameElement  {
 
 	public int captureGoal(Snake snake) throws InterruptedException {
 		if (value < MAX_VALUE) {
-			BoardPosition position = generateGoalPosition();
+			BoardPosition position = getBoard().getNewRandomPosition();
 			getBoard().getCell(position).setGameElement((GameElement)this);
 			getBoard().setGoalPosition(position);
 			this.incrementValue();
@@ -34,21 +34,4 @@ public class Goal extends GameElement  {
 	public Board getBoard() {
 		return board;
 	}
-	
-	public BoardPosition generateGoalPosition() {
-		int posX = (int) (Math.random() * Board.NUM_ROWS);
-		int posY = (int) (Math.random() * Board.NUM_ROWS);
-		BoardPosition position = new BoardPosition(posX, posY);
-		
-		if (getBoard().getCell(position).isOcupied()) {
-			while (getBoard().getCell(position).isOcupied()) {
-				posX = (int) (Math.random() * Board.NUM_ROWS);
-				posY = (int) (Math.random() * Board.NUM_ROWS);
-				position = new BoardPosition(posX, posY);
-			}
-
-		}
-		return position;
-	}
-	
 }

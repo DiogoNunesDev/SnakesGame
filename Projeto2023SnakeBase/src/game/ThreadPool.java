@@ -42,6 +42,7 @@ public class ThreadPool {
 				try {
 					Runnable task = tasksBlockingQueue.take();
 					task.run();
+					
 				} catch (InterruptedException e) {
 					if (isShutDown) {
 						return;

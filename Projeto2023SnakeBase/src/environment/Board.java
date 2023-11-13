@@ -36,6 +36,22 @@ public abstract class Board extends Observable {
 		return cells[cellCoord.x][cellCoord.y];
 	}
 
+	
+	public BoardPosition getNewRandomPosition() {
+		int posX = (int) (Math.random() * Board.NUM_ROWS);
+		int posY = (int) (Math.random() * Board.NUM_ROWS);
+		BoardPosition position = new BoardPosition(posX, posY);
+		
+		if (getCell(position).isOcupied() || getCell(position).isOcupiedByGoal()) {
+			while (getCell(position).isOcupied()) {
+				posX = (int) (Math.random() * Board.NUM_ROWS);
+				posY = (int) (Math.random() * Board.NUM_ROWS);
+				position = new BoardPosition(posX, posY);
+			}
+		}
+		return position;
+	}
+	
 	protected BoardPosition getRandomPosition() {
 		return new BoardPosition((int) (Math.random() *NUM_ROWS),(int) (Math.random() * NUM_ROWS));
 	}
