@@ -46,6 +46,10 @@ public class LocalBoard extends Board{
 	public void init() {
 		for(Snake s:snakes)
 			s.start();
+		for(Obstacle obstacle : this.getObstacles()) {
+			ObstacleMover mover = new ObstacleMover(obstacle, this);
+			threadPool.submit(mover);
+		}
 		setChanged();
 	}
 
