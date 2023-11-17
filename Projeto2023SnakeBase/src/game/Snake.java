@@ -75,7 +75,6 @@ public abstract class Snake extends Thread implements Serializable{
 		try {
 			board.getCell(at).request(this);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		cells.add(board.getCell(at));

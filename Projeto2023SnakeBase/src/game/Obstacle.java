@@ -47,10 +47,9 @@ public class Obstacle extends GameElement {
 		return getBoard().getCell(getPosition()) ;
 	}
 	
-	protected synchronized void move(Cell cell) throws InterruptedException {
-		getCell().setGameElement(null);
+	protected void move(Cell cell) throws InterruptedException {
+		getCell().removeObstacle();
 		cell.setGameElement((GameElement)this);
-		notifyAll();
 		decrementValue();
 		getBoard().setChanged();
 	}

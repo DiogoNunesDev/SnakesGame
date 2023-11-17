@@ -84,12 +84,22 @@ public class Cell {
 	}
 
 	public Goal removeGoal() {
-		// TODO
-		return null;
+		if (gameElement instanceof Goal) {
+			setGameElement(null);
+		}
+		Goal goal = (Goal) gameElement;
+		return goal;
 	}
 
 	public void removeObstacle() {
-		// TODO
+		lock.lock();
+		try {
+			setGameElement(null);;
+			isFree.signalAll();
+		}
+	    finally {
+	        lock.unlock();
+	    }
 	}
 
 	public Goal getGoal() {

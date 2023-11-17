@@ -4,7 +4,7 @@ import environment.BoardPosition;
 import environment.Cell;
 import environment.LocalBoard;
 import java.lang.Runnable;
-public class ObstacleMover implements Runnable {
+public class ObstacleMover extends Thread{
 	private Obstacle obstacle;
 	private LocalBoard board;
 

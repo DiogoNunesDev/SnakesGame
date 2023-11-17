@@ -13,10 +13,11 @@ import game.Goal;
 import game.Obstacle;
 import game.Server;
 import game.Snake;
-import game.ThreadPool;
+//import game.ThreadPool;
 import game.AutomaticSnake;
-import game.ThreadPool;
 import game.ObstacleMover;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 /** Class representing the state of a game running locally
  * 
  * @author luismota
@@ -27,7 +28,7 @@ public class LocalBoard extends Board{
 	private static final int NUM_SNAKES = 2;
 	private static final int NUM_OBSTACLES = 25;
 	private static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3;
-	private ThreadPool threadPool;
+	private ExecutorService threadPool;
 	
 
 	public LocalBoard() {
@@ -38,7 +39,7 @@ public class LocalBoard extends Board{
 		}
 
 		addObstacles(NUM_OBSTACLES);
-		threadPool = new ThreadPool(NUM_SIMULTANEOUS_MOVING_OBSTACLES);
+		threadPool = Executors.newFixedThreadPool(NUM_SIMULTANEOUS_MOVING_OBSTACLES);
 		Goal goal=addGoal();
 //		System.err.println("All elements placed");
 	}
@@ -48,7 +49,7 @@ public class LocalBoard extends Board{
 			s.start();
 		for(Obstacle obstacle : this.getObstacles()) {
 			ObstacleMover mover = new ObstacleMover(obstacle, this);
-			threadPool.submit(mover);
+			threadPool.execute(mover);
 		}
 		setChanged();
 	}
