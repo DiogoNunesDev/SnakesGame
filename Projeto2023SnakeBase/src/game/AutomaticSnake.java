@@ -29,6 +29,7 @@ public class AutomaticSnake extends Snake {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);
 				Cell nextCell = null;
 				if (getIsWaiting() == false) {
+					
 					BoardPosition goalPosition = getBoard().getGoalPosition();
 					BoardPosition snakePosition = this.getCells().getLast().getPosition();
 					Cell currentCell = getBoard().getCell(snakePosition);
