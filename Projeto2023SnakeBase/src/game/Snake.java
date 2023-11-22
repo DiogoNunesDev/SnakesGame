@@ -20,6 +20,7 @@ public abstract class Snake extends Thread implements Serializable{
 	protected int size = 5;
 	private int id;
 	private Board board;
+	private boolean isWaiting = false;
 	public Snake(int id,Board board) {
 		this.id = id;
 		this.board=board;
@@ -39,6 +40,14 @@ public abstract class Snake extends Thread implements Serializable{
 	
 	public LinkedList<Cell> getCells() {
 		return cells;
+	}
+	
+	public boolean getIsWaiting() {
+		return this.isWaiting;
+	}
+	
+	public void setIsWaiting(boolean state) {
+		this.isWaiting = state;
 	}
 	protected void move(Cell cell) throws InterruptedException {
 		cell = check_outOfBounds(cell);
@@ -105,5 +114,29 @@ public abstract class Snake extends Thread implements Serializable{
 		return cell;
 	
 	
+	}
+	
+	public Cell changeDirection() {
+		
+		BoardPosition goalPosition = getBoard().getGoalPosition();
+		BoardPosition snakePosition = this.getCells().getLast().getPosition();
+		Cell currentCell = getBoard().getCell(snakePosition);
+
+		double min_distanceToGoal = Double.MAX_VALUE;
+		Cell nextCell = null;
+
+		for (BoardPosition pos : getBoard().getNeighboringPositions(currentCell)) {
+			if (!this.getBoard().getCell(pos).isOcupied() || !this.getCells().contains(getBoard().getCell(pos))) {
+				Cell potencialCell = this.getBoard().getCell(pos);
+				double distanceToGoal = pos.distanceTo(goalPosition);
+
+				if (distanceToGoal < min_distanceToGoal) { 
+					nextCell = potencialCell; 
+					min_distanceToGoal =distanceToGoal; 
+				}				 
+			}
+		}
+		return nextCell;
+
 	}
 }

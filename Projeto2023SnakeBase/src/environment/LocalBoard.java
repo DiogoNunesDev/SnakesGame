@@ -13,7 +13,7 @@ import game.Goal;
 import game.Obstacle;
 import game.Server;
 import game.Snake;
-//import game.ThreadPool;
+
 import game.AutomaticSnake;
 import game.ObstacleMover;
 import java.util.concurrent.ExecutorService;

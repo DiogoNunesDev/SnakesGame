@@ -12,6 +12,7 @@ import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import game.Snake;
 import environment.Board;
 import environment.LocalBoard;
 /**
@@ -50,7 +51,12 @@ public class SnakeGui implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO
+				if (e.getSource() == resetObstaclesButton) {
+					for (Snake snake : board.getSnakes()) {
+						snake.setIsWaiting(true);
+						
+					}				
+				}
 			}
 				
 		});
