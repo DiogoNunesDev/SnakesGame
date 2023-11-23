@@ -47,6 +47,7 @@ public class Cell {
 				this.gameElement=null;
 			}
 			while (isOcupied()) {
+				System.out.println("fiquei parado");
 				isFree.await();
 			}
 			ocuppyingSnake = snake;
@@ -71,7 +72,13 @@ public class Cell {
 	}
 
 	public synchronized void setGameElement(GameElement element) {
-		gameElement = element;
+		lock.lock();
+		try {
+			gameElement = element;
+		}finally{
+			lock.unlock();
+		}
+		
 
 	}
 
@@ -113,8 +120,7 @@ public class Cell {
 	 public void leaveCell() {
 			lock.lock();
 			try {
-				ocuppyingSnake = null;
-				lock.notifyAll();
+				isFree.signalAll();
 			}
 		    finally {
 		        lock.unlock();

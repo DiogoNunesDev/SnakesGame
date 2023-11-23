@@ -116,27 +116,27 @@ public abstract class Snake extends Thread implements Serializable{
 	
 	}
 	
-	public Cell newDirection() {
+	public BoardPosition newDirection() {
 		
 		BoardPosition goalPosition = getBoard().getGoalPosition();
 		BoardPosition snakePosition = this.getCells().getLast().getPosition();
 		Cell currentCell = getBoard().getCell(snakePosition);
 
 		double min_distanceToGoal = Double.MAX_VALUE;
-		Cell nextCell = null;
+		BoardPosition nextDirection = null;
 
 		for (BoardPosition pos : getBoard().getNeighboringPositions(currentCell)) {
-			if (!this.getBoard().getCell(pos).isOcupied() || !this.getCells().contains(getBoard().getCell(pos))) {
-				Cell potencialCell = this.getBoard().getCell(pos);
+			if (!this.getBoard().getCell(pos).isOcupied() && !this.getCells().contains(getBoard().getCell(pos))) {
 				double distanceToGoal = pos.distanceTo(goalPosition);
-
-				if (distanceToGoal < min_distanceToGoal) { 
-					nextCell = potencialCell; 
-					min_distanceToGoal =distanceToGoal; 
-				}				 
+				System.out.println(pos + "   ||||  next ||| " + this.getId());
+				nextDirection = pos;
+//				if (distanceToGoal < min_distanceToGoal) { 
+//					nextDirection = pos;
+//					min_distanceToGoal = distanceToGoal; 
+//				}				 
 			}
 		}
-		return nextCell;
+		return nextDirection;
 
 	}
 	

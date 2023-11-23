@@ -54,7 +54,7 @@ public class SnakeGui implements Observer {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == resetObstaclesButton) {
 					for (Snake snake : board.getSnakes()) {
-						snake.setIsWaiting(true);
+						snake.interrupt();
 
 					}
 				}
