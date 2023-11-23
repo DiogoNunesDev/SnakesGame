@@ -116,7 +116,7 @@ public abstract class Snake extends Thread implements Serializable{
 	
 	}
 	
-	public Cell changeDirection() {
+	public Cell newDirection() {
 		
 		BoardPosition goalPosition = getBoard().getGoalPosition();
 		BoardPosition snakePosition = this.getCells().getLast().getPosition();
@@ -139,4 +139,17 @@ public abstract class Snake extends Thread implements Serializable{
 		return nextCell;
 
 	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

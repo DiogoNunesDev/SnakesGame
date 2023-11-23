@@ -28,6 +28,7 @@ public class AutomaticSnake extends Snake {
 			try {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);
 				Cell nextCell = null;
+				Cell potCell = null;
 				if (getIsWaiting() == false) {
 					
 					BoardPosition goalPosition = getBoard().getGoalPosition();
@@ -36,23 +37,26 @@ public class AutomaticSnake extends Snake {
 					
 					double min_distanceToGoal = Double.MAX_VALUE;
 					
-					
 					for(BoardPosition pos : getBoard().getNeighboringPositions(currentCell)) {
 						Cell potencialCell = this.getBoard().getCell(pos);
 						double distanceToGoal = pos.distanceTo(goalPosition);
 						
 						if (!this.cells.contains(potencialCell) && distanceToGoal < min_distanceToGoal) {
 							nextCell = potencialCell;
+							potCell=potencialCell;
 							min_distanceToGoal = distanceToGoal;
 						}	
 					}
+					
 				}else {
 					System.out.println("CHEGUEI AQUI!!!");
-					nextCell = changeDirection();
+					nextCell = newDirection();
+					this.setIsWaiting(false);
 				}
 				
 				if (nextCell != null) {
 					this.move(nextCell);
+					//potCell.leaveCell();
 				}
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();

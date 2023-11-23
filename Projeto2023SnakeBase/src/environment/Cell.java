@@ -109,5 +109,16 @@ public class Cell {
 	public boolean isOcupiedByGoal() {
 		return (gameElement != null && gameElement instanceof Goal);
 	}
+	 
+	 public void leaveCell() {
+			lock.lock();
+			try {
+				ocuppyingSnake = null;
+				lock.notifyAll();
+			}
+		    finally {
+		        lock.unlock();
+		    }
+		}
 
 }

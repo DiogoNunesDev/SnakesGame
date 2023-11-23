@@ -15,9 +15,10 @@ import javax.swing.JFrame;
 import game.Snake;
 import environment.Board;
 import environment.LocalBoard;
+
 /**
- *  Class to create and configure GUI.
- *  Only the listener to the button should be edited, see TODO below.
+ * Class to create and configure GUI. Only the listener to the button should be
+ * edited, see TODO below.
  * 
  * @author luismota
  *
@@ -31,38 +32,37 @@ public class SnakeGui implements Observer {
 	private BoardComponent boardGui;
 	private Board board;
 
-	public SnakeGui(Board board, int x,int y) {
+	public SnakeGui(Board board, int x, int y) {
 		super();
-		this.board=board;
-		frame= new JFrame("The Snake Game: "+(board instanceof LocalBoard?"Local":"Remote"));
+		this.board = board;
+		frame = new JFrame("The Snake Game: " + (board instanceof LocalBoard ? "Local" : "Remote"));
 		frame.setLocation(x, y);
 		buildGui();
 	}
 
 	private void buildGui() {
 		frame.setLayout(new BorderLayout());
-		
+
 		boardGui = new BoardComponent(board);
 		boardGui.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
-		frame.add(boardGui,BorderLayout.CENTER);
+		frame.add(boardGui, BorderLayout.CENTER);
 
-		JButton resetObstaclesButton=new JButton("Reset snakes' directions");
+		JButton resetObstaclesButton = new JButton("Reset snakes' directions");
 		resetObstaclesButton.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == resetObstaclesButton) {
 					for (Snake snake : board.getSnakes()) {
 						snake.setIsWaiting(true);
-						
-					}				
+
+					}
 				}
 			}
-				
+
 		});
-		frame.add(resetObstaclesButton,BorderLayout.SOUTH);
-		
-		
+		frame.add(resetObstaclesButton, BorderLayout.SOUTH);
+
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
