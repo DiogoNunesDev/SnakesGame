@@ -21,7 +21,7 @@ public class AutomaticSnake extends Snake {
 	public void run() {
 		doInitialPositioning();
 		System.err.println("initial size:" + cells.size());
-		while (true) {// this.size < 10) {
+		while (!getBoard().getIsFinished()) {
 			Cell nextCell = null;
 			try {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);
@@ -44,36 +44,20 @@ public class AutomaticSnake extends Snake {
 						min_distanceToGoal = distanceToGoal;
 					}
 				}
-
-//				}else {
-//					System.out.println("CHEGUEI AQUI!!!");
-//					nextCell = newDirection();
-//					//this.setIsWaiting(false);
-//				}
-
+				
 				if (nextCell != null) {
 					this.move(nextCell);
 				}
 			} catch (InterruptedException e1) {
-				System.out.println("interrupted");
 
 				BoardPosition nextPosition = newDirection();
 				Cell new_nextCell = this.getBoard().getCell(nextPosition);
-				if (nextPosition != null) {
-					System.out.println("not null" + nextPosition);
-				}
-				System.out.println("end");
 				if (new_nextCell != null) {
 					try {
 						this.move(new_nextCell);
-						//nextCell.leaveCell();
-						System.out.println("moved");
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					System.out.println("end");
 				}
 			}
 

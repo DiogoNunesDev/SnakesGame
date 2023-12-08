@@ -20,7 +20,7 @@ public abstract class Board extends Observable {
 	public static final int NUM_ROWS = 30;
 	protected LinkedList<Snake> snakes = new LinkedList<Snake>();
 	private LinkedList<Obstacle> obstacles= new LinkedList<Obstacle>();
-	protected boolean isFinished;
+	private boolean isFinished = false;
 
 	public Board() {
 		cells = new Cell[NUM_COLUMNS][NUM_ROWS];
@@ -58,6 +58,14 @@ public abstract class Board extends Observable {
 
 	public BoardPosition getGoalPosition() {
 		return goalPosition;
+	}
+	
+	public boolean getIsFinished() {
+		return this.isFinished;
+	}
+	
+	public void setIsFinished(boolean isFinished) {
+		this.isFinished = isFinished;
 	}
 
 	public void setGoalPosition(BoardPosition goalPosition) {

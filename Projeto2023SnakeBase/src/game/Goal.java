@@ -25,8 +25,11 @@ public class Goal extends GameElement  {
 			getBoard().getCell(position).setGameElement((GameElement)this);
 			getBoard().setGoalPosition(position);
 			this.incrementValue();
-			snake.size++;
+			snake.size += getValue();
 			getBoard().setChanged();
+		}
+		else {
+			getBoard().setIsFinished(true);
 		}
 		return -1;
 	}
