@@ -22,6 +22,7 @@ public class ClientHandler extends Thread {
 	private ObjectInputStream in;
 	private ClientSnake snake;
 	private boolean playerInitializationReceived = true;
+
 	
 	public ClientHandler(Socket socket, Server server) throws IOException {
 		this.socket = socket;
@@ -29,10 +30,6 @@ public class ClientHandler extends Thread {
 		makeConnections();
 	}
 	
-	
-	//It's a thread that handles all input and output for one client.
-	//It reads messages from the client and can send messages back.
-	//It also can broadcast messages to other clients through the server.
 	
 	private void makeConnections() throws IOException {
 		out = new ObjectOutputStream(socket.getOutputStream());
@@ -60,14 +57,14 @@ public class ClientHandler extends Thread {
 	
 	private void receiveFromCliente() {
 	    try {
-	    	while(true) {
+	    	while(!server.getBoard().getEndGame()) {
 	    		
 	    		if(playerInitializationReceived) {
 			        RemoteBoard clientBoard = (RemoteBoard) in.readObject();
 			        clientJoinGame(clientBoard.getSnake());
 			        playerInitializationReceived=false;
 	    		}
-	    		String command = (String) in.readUnshared();
+	    		String command = (String) in.readObject();
 	    		moveHumanSnake(command);
 	    	}
 	    } catch (ClassNotFoundException | IOException e) {
@@ -84,23 +81,25 @@ public class ClientHandler extends Thread {
 	
 	}
 	
-	private void moveHumanSnake(String command) {
+	private synchronized void moveHumanSnake(String command) {
 		if(command!=null) {
-			BoardPosition nextPosition = snake.getDirection(command);
-			Cell nextCell = server.getBoard().getCell(nextPosition);
-			System.out.println(nextCell.getPosition());
-			if(!nextCell.isOcupied() && !nextCell.isOutOfBounds()) {
-				try {
-					snake.makeMove(nextCell);
-					server.getBoard().setChanged();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			if(true) {
+				BoardPosition nextPosition = snake.getDirection(command);
+				if(!nextPosition.isOutOfBounds()) {
+					Cell nextCell = server.getBoard().getCell(nextPosition);
+					if(!nextCell.isOcupied() && !nextCell.isOutOfBounds() && nextCell!=null) {
+						try {
+							snake.makeMove(nextCell);
+							server.getBoard().setChanged();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+					}
 				}
 			}
-		}
+		}	
 	}
 
-	
 	
 	private void closeConnection() {
 		try {

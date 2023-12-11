@@ -20,7 +20,7 @@ public abstract class Board extends Observable implements Serializable{
 	public static final int NUM_ROWS = 30;
 	protected LinkedList<Snake> snakes = new LinkedList<Snake>();
 	private LinkedList<Obstacle> obstacles= new LinkedList<Obstacle>();
-	private boolean isFinished = false;
+	private boolean endGame = false;
 
 	public Board() {
 		cells = new Cell[NUM_COLUMNS][NUM_ROWS];
@@ -60,12 +60,12 @@ public abstract class Board extends Observable implements Serializable{
 		return goalPosition;
 	}
 	
-	public boolean getIsFinished() {
-		return this.isFinished;
+	public boolean getEndGame() {
+		return this.endGame;
 	}
 	
-	public void setIsFinished(boolean isFinished) {
-		this.isFinished = isFinished;
+	public void setEndGame(boolean endGame) {
+		this.endGame = endGame;
 	}
 
 	public void setGoalPosition(BoardPosition goalPosition) {
@@ -162,10 +162,13 @@ public abstract class Board extends Observable implements Serializable{
 		this.obstacles = obstacles;
 	}
 
-	public void setFinished(boolean isFinished) {
-		this.isFinished = isFinished;
+	public void endGame() {
+	    for (Snake snake : snakes) {
+	    	System.out.println("Stopping player: " + snake.getId());
+	        snake.currentThread().interrupt();
+	        
+	    }
 	}
-	
 	
 
 }

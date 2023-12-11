@@ -17,11 +17,18 @@ public class ClientSnake extends HumanSnake implements Serializable{
 	
 	@Override
 	public void run() {
+		try {
+			ClientSnake.sleep(10000); // espera 10 segundos antes de entrar no jogo
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		};
 		doInitialPositioning();
 	}
 
 	public void makeMove(Cell cell) throws InterruptedException {
-		this.move(cell);
+		if(cell != null) {
+			this.move(cell);
+		}
 	}
 	
 	

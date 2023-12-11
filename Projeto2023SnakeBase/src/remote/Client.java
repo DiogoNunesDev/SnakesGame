@@ -4,6 +4,7 @@ package remote;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 import environment.Board;
@@ -20,19 +21,22 @@ public class Client {
 
 	
 	private Socket socket;
-	private String address;
+	private InetAddress address;
+	private int port;
 	private RemoteBoard board;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	private boolean playerInitializationSent = true;
 	
 	public static void main(String[] args) throws IOException {
-		Client client = new Client("localhost", 1234);
+		Client client = new Client(InetAddress.getByName("localhost"), 1234);
 		client.run();
 		
 	}
 	
-	public Client(String address, int port) throws IOException {
+	public Client(InetAddress address, int port) throws IOException {
+		this.address=address;
+		this.port = port;
 		socket = new Socket(address, port);
 		makeConnections();
 		board = new RemoteBoard();
@@ -65,7 +69,7 @@ public class Client {
 		           	sendPlayerInitialization(board);
 		           	playerInitializationSent=false;
 		        }
-				while (true) {
+				while (!board.getEndGame()){
 					Thread.sleep(board.REMOTE_REFRESH_INTERVAL);
 					sendPlayerCommand(board.getCommand());
 				}
@@ -81,12 +85,13 @@ public class Client {
 	
 	private void receiveGameState() {
 		try {	
-			while(true) {
+			Thread.currentThread().sleep(board.REMOTE_REFRESH_INTERVAL);
+			while(!board.getEndGame()) {
 				Board receivedBoard = (Board) in.readObject();
 				board.update(receivedBoard);
 			}
-		} catch (ClassNotFoundException | IOException e) {
-	        e.printStackTrace();
+		} catch (ClassNotFoundException | IOException | InterruptedException e) {
+	        System.out.println("Connection was lost..");
 	        // Handle exceptions
 	    }
 	}

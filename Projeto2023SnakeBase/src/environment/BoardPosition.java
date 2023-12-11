@@ -47,4 +47,8 @@ public class BoardPosition implements Serializable{
 	public BoardPosition getCellRight() {
 		return new BoardPosition(x+1, y);
 	}
+	
+	public boolean isOutOfBounds() {
+		return x < 0 || x >= 30 || y < 0 || y >= 30; 
+	}
 }

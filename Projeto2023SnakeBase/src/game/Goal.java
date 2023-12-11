@@ -31,7 +31,7 @@ public class Goal extends GameElement  implements Serializable{
 			getBoard().setChanged();
 		}
 		else {
-			getBoard().setIsFinished(true);
+			getBoard().setEndGame(true);
 		}
 		return -1;
 	}

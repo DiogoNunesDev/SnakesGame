@@ -75,7 +75,7 @@ public class RemoteBoard extends Board{
         setGoalPosition(board.getGoalPosition()); 
         snakes = board.getSnakes();
         setObstacles(board.getObstacles());
-        setFinished(board.getIsFinished());
+        setEndGame(board.getEndGame());
 		setChanged();
 		if(snake==null) {
 			int id = board.getSnakes().size() + 1;

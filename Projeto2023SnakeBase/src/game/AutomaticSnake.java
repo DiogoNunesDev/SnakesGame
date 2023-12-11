@@ -22,7 +22,7 @@ public class AutomaticSnake extends Snake implements Serializable{
 	public void run() {
 		doInitialPositioning();
 		System.err.println("initial size:" + cells.size());
-		while (!getBoard().getIsFinished()) {
+		while (!getBoard().getEndGame()) {
 			Cell nextCell = null;
 			try {
 				Thread.sleep(getBoard().PLAYER_PLAY_INTERVAL);

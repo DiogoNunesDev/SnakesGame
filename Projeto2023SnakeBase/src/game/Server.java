@@ -37,15 +37,17 @@ public class Server {
 		new Thread(this::startGame).start();
 		new Thread(this::startBroadcasting).start();
 		try {
-			while(true) {
+			while(!getBoard().getEndGame()) {
 				Socket clientSocket = serverSocket.accept();
 				System.out.println("Accepted to server...");
 				ClientHandler clientHandler = new ClientHandler(clientSocket, this);
 				addClientHandler(clientHandler);
 				threadpool.execute(clientHandler);
-			}	
+			}
+			if(getBoard().getEndGame())
+				getBoard().endGame();
 		}catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("cheguei aqui");
 		} finally {
 			try {
 				serverSocket.close();
@@ -84,7 +86,7 @@ public class Server {
 	public synchronized void startBroadcasting() {
 		
 		new Thread(()->{
-			while(true) {
+			while(!board.getEndGame()) {
 	        	try {
 					Thread.sleep(getBoard().REMOTE_REFRESH_INTERVAL);
 					broadcastBoard();
