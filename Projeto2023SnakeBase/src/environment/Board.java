@@ -11,7 +11,7 @@ import game.Goal;
 import game.Obstacle;
 import game.Snake;
 
-public abstract class Board extends Observable {
+public abstract class Board extends Observable implements Serializable{
 	protected Cell[][] cells;
 	private BoardPosition goalPosition;
 	public static final long PLAYER_PLAY_INTERVAL = 100;
@@ -154,5 +154,18 @@ public abstract class Board extends Observable {
 		snakes.add(snake);
 	}
 
+	public void setSnakes(LinkedList<Snake> snakes) {
+		this.snakes = snakes;
+	}
+
+	public void setObstacles(LinkedList<Obstacle> obstacles) {
+		this.obstacles = obstacles;
+	}
+
+	public void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+	
+	
 
 }

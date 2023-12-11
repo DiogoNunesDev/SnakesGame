@@ -3,48 +3,100 @@ package game;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import remote.Client;
+import environment.Board;
+import environment.LocalBoard;
+import gui.SnakeGui;
 import remote.ClientHandler;
 
 public class Server {
 	
-	public static final int port = 1234;
+	public static final int PORT = 1234;
 	private final ServerSocket serverSocket;
-	private ArrayList<ClientHandler> handlers;
+	private List<ClientHandler> clientHandlers = new CopyOnWriteArrayList<>();
+	private Board board;
+	private ExecutorService threadpool = Executors.newCachedThreadPool();
 	
-	
-	
-	public Server(ServerSocket serverSocket) {
-		this.serverSocket = serverSocket;
-		
+	public Server(Board board) throws IOException {
+		this.serverSocket = new ServerSocket(PORT);
+		this.board = board;
+		threadpool = Executors.newCachedThreadPool();
+		System.out.println("Server has started...");
 	}
 	
-	private void broadcastMessage(ClientHandler sender, String message) {
-		for(ClientHandler clientHandler : handlers) {
-			System.out.println("IM HERE");
-		}
+	private void startGame() {
+		SnakeGui game = new SnakeGui(board,600,0);
+		game.init();
 	}
 	
-	
-	//When a new client connects, the server creates a new ClientHandler thread to manage communications with that client.
-	private void acceptClient() {
-		System.out.println("Start server");
-		handlers = new ArrayList<ClientHandler>();
+	public void start(){
+		new Thread(this::startGame).start();
+		new Thread(this::startBroadcasting).start();
 		try {
-			while(!serverSocket.isClosed()) {
-				System.out.println("Waiting for clients");
-				Socket socket = serverSocket.accept();
-				System.out.println("Accepted");
-				ClientHandler clientHandler = new ClientHandler(socket);
-				System.out.println("Connection established");
-				
+			while(true) {
+				Socket clientSocket = serverSocket.accept();
+				System.out.println("Accepted to server...");
+				ClientHandler clientHandler = new ClientHandler(clientSocket, this);
+				addClientHandler(clientHandler);
+				threadpool.execute(clientHandler);
+			}	
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				serverSocket.close();
+	            threadpool.shutdown();
+	            System.out.println("Shutting down server...");
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
+			
+			
 		}
 	}
+	
+	public void addClientHandler(ClientHandler clientHandler) {
+        clientHandlers.add(clientHandler);
+    }
+
+    public void removeClientHandler(ClientHandler clientHandler) {
+        clientHandlers.remove(clientHandler);
+    }
+
+	public Board getBoard() {
+		return board;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+	
+	public void broadcastBoard() throws IOException {
+        for (ClientHandler clientHandler : clientHandlers) {
+            clientHandler.sendBoard(this.getBoard());
+        }
+    }
+	
+	public synchronized void startBroadcasting() {
+		
+		new Thread(()->{
+			while(true) {
+	        	try {
+					Thread.sleep(getBoard().REMOTE_REFRESH_INTERVAL);
+					broadcastBoard();
+				} catch (InterruptedException | IOException e) {
+					Thread.currentThread().interrupt();
+					System.out.println("Broadcast was interrupted...");
+					break;
+				}
+	        }
+		}).start();
+        
+    }
 	
 	
 }

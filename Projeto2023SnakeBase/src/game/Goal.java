@@ -1,10 +1,12 @@
 package game;
 
+import java.io.Serializable;
+
 import environment.Board;
 import environment.BoardPosition;
 import environment.LocalBoard;
 
-public class Goal extends GameElement  {
+public class Goal extends GameElement  implements Serializable{
 	private int value=1;
 	private Board board;
 	public static final int MAX_VALUE=10;

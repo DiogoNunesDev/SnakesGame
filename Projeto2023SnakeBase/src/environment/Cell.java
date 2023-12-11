@@ -19,12 +19,10 @@ import game.AutomaticSnake;
  * @author luismota
  *
  */
-public class Cell {
+public class Cell implements Serializable{
 	private BoardPosition position;
 	private Snake ocuppyingSnake = null;
 	private GameElement gameElement = null;
-	private Lock lock = new ReentrantLock();
-	private Condition isFree = lock.newCondition();
 
 	public GameElement getGameElement() {
 		return gameElement;
@@ -40,31 +38,24 @@ public class Cell {
 	}
 
 	public void request(Snake snake) throws InterruptedException {
-		lock.lock();
-		try {
+		synchronized(this) {
 			if(this.isOcupiedByGoal()) {
 				this.getGoal().captureGoal(snake);
 				this.gameElement=null;
 			}
 			while (isOcupied()) {
-				System.out.println("fiquei parado");
-				isFree.await();
+				wait();
 			}
 			ocuppyingSnake = snake;
-		} finally {
-			lock.unlock();
 		}
 	}
 
 	public void release() {
-		lock.lock();
-		try {
+		
+		synchronized (this) {
 			ocuppyingSnake = null;
-			isFree.signalAll();
+			notifyAll();
 		}
-	    finally {
-	        lock.unlock();
-	    }
 	}
 
 	public boolean isOcupiedBySnake() {
@@ -72,14 +63,8 @@ public class Cell {
 	}
 
 	public synchronized void setGameElement(GameElement element) {
-		lock.lock();
-		try {
-			gameElement = element;
-		}finally{
-			lock.unlock();
-		}
+		gameElement = element;
 		
-
 	}
 
 	public boolean isOcupied() {
@@ -98,15 +83,12 @@ public class Cell {
 		return goal;
 	}
 
-	public void removeObstacle() {
-		lock.lock();
-		try {
-			setGameElement(null);;
-			isFree.signalAll();
+	public synchronized void removeObstacle() {
+		
+		if(gameElement instanceof Obstacle) {
+			setGameElement(null);
+			notifyAll();
 		}
-	    finally {
-	        lock.unlock();
-	    }
 	}
 
 	public Goal getGoal() {
@@ -117,14 +99,14 @@ public class Cell {
 		return (gameElement != null && gameElement instanceof Goal);
 	}
 	 
-	 public void leaveCell() {
-			lock.lock();
-			try {
-				isFree.signalAll();
-			}
-		    finally {
-		        lock.unlock();
-		    }
-		}
-
+	 public synchronized void leaveCell() {
+		 notifyAll();
+	}
+	 
+	public boolean isOutOfBounds() {
+		int x = this.getPosition().x;
+		int y = this.getPosition().y;
+		return x < 0 || x >= 30 || y < 0 || y >= 30; 
+	}
+	
 }

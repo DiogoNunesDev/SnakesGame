@@ -28,7 +28,7 @@ public class LocalBoard extends Board{
 	private static final int NUM_SNAKES = 2;
 	private static final int NUM_OBSTACLES = 25;
 	private static final int NUM_SIMULTANEOUS_MOVING_OBSTACLES = 3;
-	private ExecutorService threadPool;
+	private transient ExecutorService threadPool;
 	
 
 	public LocalBoard() {
@@ -45,8 +45,10 @@ public class LocalBoard extends Board{
 	}
 
 	public void init() {
-		for(Snake s:snakes)
+		for(Snake s:snakes) {
 			s.start();
+		}
+
 		for(Obstacle obstacle : this.getObstacles()) {
 			ObstacleMover mover = new ObstacleMover(obstacle, this);
 			threadPool.execute(mover);
